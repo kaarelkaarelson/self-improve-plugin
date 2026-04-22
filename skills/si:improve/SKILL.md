@@ -30,10 +30,17 @@ Hold both in memory and use whichever is appropriate in subsequent steps. Search
 
 ### Step 2a: Load collected errors
 
-Run `/si:errors` first if it hasn't been run yet. Then read the most recent error log:
+Run `/si:errors` first if it hasn't been run yet.
+
+Check the current session context for a path printed by `/si:errors` (format: `Error log saved: ~/.si-errors/<session-id>.json`). If found, use that path directly.
+
+If not found, derive the session ID and look for the file:
 
 ```bash
-ERROR_LOG=$(ls -t ~/.si-improve/error-logs/*.json 2>/dev/null | head -1)
+PROJECT_DIR=$(find ~/.claude/projects -maxdepth 1 -type d -name "*$(basename $PWD)*" | head -1)
+SESSION_JSONL=$(ls -t "$PROJECT_DIR"/*.jsonl 2>/dev/null | head -1)
+SESSION_ID=$(basename "$SESSION_JSONL" .jsonl)
+ERROR_LOG=~/.si-errors/"$SESSION_ID".json
 echo "Error log: $ERROR_LOG"
 ```
 

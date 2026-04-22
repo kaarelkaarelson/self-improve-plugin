@@ -22,11 +22,17 @@ echo "ID: $SESSION_ID"
 ## Step 2 — Extract and save
 
 ```bash
-mkdir -p ~/.si-improve/error-logs
-OUTPUT_PATH=~/.si-improve/error-logs/"$SESSION_ID".json
+mkdir -p ~/.si-errors
+OUTPUT_PATH=~/.si-errors/"$SESSION_ID".json
 python3 "${CLAUDE_SKILL_DIR}/extract_session_failures.py" "$SESSION_JSONL" --json \
   > "$OUTPUT_PATH"
 echo "Saved: $OUTPUT_PATH"
+```
+
+Print the saved path clearly to the chat so `/si:improve` can find it:
+
+```
+Error log saved: ~/.si-errors/<session-id>.json
 ```
 
 ## Step 3 — Display results
@@ -37,4 +43,4 @@ python3 "${CLAUDE_SKILL_DIR}/extract_session_failures.py" "$SESSION_JSONL"
 
 Display the human-readable output directly. If no events found, say so.
 
-The structured JSON is saved at `~/.si-improve/error-logs/<session-id>.json` for use by `/si:improve`.
+The structured JSON is saved at `~/.si-errors/<session-id>.json` for use by `/si:improve`.
