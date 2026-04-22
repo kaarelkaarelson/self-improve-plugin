@@ -1,0 +1,18 @@
+{
+  "name": "self-improve",
+  "version": "0.1.0",
+  "description": "Turn session failures into durable harness improvements. Extracts friction events, scans your Claude config for gaps, and surgically updates skills and CLAUDE.md files so the same mistakes never happen again.",
+  "author": {
+    "name": "Kaarel Kaarelson",
+    "email": "kaarel.kaarelson@gmail.com"
+  },
+  "repository": "https://github.com/kaarelkaarelson/self-improve-plugin",
+  "license": "MIT",
+  "keywords": [
+    "self-improve",
+    "session-analysis",
+    "claude-config",
+    "skill-improvement",
+    "meta-learning"
+  ]
+}
