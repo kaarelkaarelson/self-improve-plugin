@@ -29,17 +29,6 @@ LLM coding agents have no equivalent layer. Each session is a fresh unreliable c
 claude plugin install https://github.com/kaarelkaarelson/self-improve-plugin
 ```
 
-## Usage
-
-At the end of a session, run:
-
-```
-/si:errors
-/si:improve
-```
-
-`/si:errors` extracts and saves the event log. `/si:improve` reads it, analyzes the timeline, and walks you through applying the fixes.
-
 ## What gets improved
 
 - Your global or project CLAUDE.md — missing rules and wrong assumptions that caused friction
