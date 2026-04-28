@@ -67,9 +67,11 @@ For each friction event worth compounding, extract:
 
 Print the findings to the chat before proceeding:
 
-| # | What happened | Root cause | What would have prevented it | Worth improving? |
-|---|---------------|------------|------------------------------|-----------------|
-| 1 | …             | …          | …                            | Yes / No        |
+| # | Line | What happened | Root cause | What would have prevented it | Worth improving? |
+|---|------|---------------|------------|------------------------------|-----------------|
+| 1 | N    | …             | …          | …                            | Yes / No        |
+
+**Line**: the `line` field from the error event in the si:errors JSON. This is the JSONL line number used as the checkpoint index when calling si:verify after changes are applied.
 
 **Worth improving?** rubric:
 - **Yes** — repeated pattern, cost meaningful time, or caused the user to steer/correct course
@@ -145,6 +147,53 @@ For each approved change, read the target file and apply the minimal surgical ed
 
 When the approved change introduces a new workflow skill, check both the global and project CLAUDE.md (if it exists) for a `## Custom skills @self-improve` section. Add the one-line invocation rule to whichever is most appropriate — project CLAUDE.md if the skill is project-specific, global otherwise. Create the section at the bottom of the target file if it doesn't exist.
 
+## Step 5b: Record checkpoints and verify
+
+For each change applied in Step 5, record a checkpoint and verify the fix.
+
+**Write the checkpoint** to `~/.si-errors/<session-id>-checkpoints.json`:
+
+```bash
+python3 - <<PYEOF
+import json, os
+from datetime import datetime, timezone
+
+SESSION_ID = "$SESSION_ID"
+LINE_NUMBER = LINE_FROM_TABLE  # the Line column value for this finding
+FIX_DESC = "one-line description of the applied fix"
+
+path = os.path.expanduser(f"~/.si-errors/{SESSION_ID}-checkpoints.json")
+existing = []
+if os.path.exists(path):
+    with open(path) as f:
+        try:
+            existing = json.load(f)
+        except Exception:
+            pass
+
+existing.append({
+    "sessionId": SESSION_ID,
+    "messageIndex": LINE_NUMBER,
+    "appliedFix": FIX_DESC,
+    "recordedAt": datetime.now(timezone.utc).isoformat(),
+})
+
+with open(path, "w") as f:
+    json.dump(existing, f, indent=2)
+print(f"Checkpoint saved: {path}")
+PYEOF
+```
+
+**Run si:verify** for each checkpoint:
+
+```
+/si:verify <session-id> <line-number>
+```
+
+Hold the result (`pass / fail / skipped`) in memory for Step 6. Run checkpoints sequentially — one si:verify call per applied change.
+
+**Skip verification** for non-verifiable fixes (style changes, wording tweaks). Record `skipped: non-verifiable` for those in Step 6.
+
 ## Step 6: Report
 
 Print a summary to the chat:
@@ -153,7 +202,7 @@ Print a summary to the chat:
 Self-Improve Complete
 
 Applied:
-  - [file]: [one-line description of change]
+  - [file]: [one-line description of change]  [Verified: pass / fail / skipped]
 
 Skipped:
   - [failure]: [reason]
@@ -163,6 +212,9 @@ Existing skills improved:   N
 Global CLAUDE.md improved:  N
 Local CLAUDE.md improved:   N
 New skills created:         N
+Verified pass:              N
+Verified fail:              N
+Verified skipped:           N
 ```
 
 ## Rules
