@@ -13,14 +13,21 @@ Analyze the current session for failures, errors, and friction, then surgically 
 
 ## Step 1: Discovery
 
-Resolve the canonical Claude config root before doing anything else. `~/.claude` may be a symlink (e.g. to `~/dotfiles/claude`). Always resolve it — never assume the path. Use the resolved root in place of `~/.claude` for all file reads, writes, and searches throughout this skill.
+```bash
+if bash "${CLAUDE_SKILL_DIR}/../si:root/scripts/check.sh"; then
+  source "$HOME/.claude/skills/si:root/cache.sh"
+else
+  echo "Root not resolved — invoke /si:root first."
+  exit 1
+fi
+```
 
-Also check for a project CLAUDE.md at `.claude/CLAUDE.md` relative to the current working directory.
+Check for a project CLAUDE.md at `.claude/CLAUDE.md` relative to the current working directory.
 
 Print both resolved paths to the chat before proceeding:
 
 ```
-Global CLAUDE.md: <resolved path>
+Global CLAUDE.md: $SI_CLAUDE_ROOT/CLAUDE.md
 Project CLAUDE.md: <resolved path or "None">
 ```
 
@@ -37,7 +44,7 @@ Check the current session context for a path printed by `/si:errors` (format: `E
 If not found, derive the session ID and look for the file:
 
 ```bash
-PROJECT_DIR=$(find ~/.claude/projects -maxdepth 1 -type d -name "*$(basename $PWD)*" | head -1)
+PROJECT_DIR=$(find "$SI_CLAUDE_ROOT/projects" -maxdepth 1 -type d -name "*$(basename $PWD)*" | head -1)
 SESSION_JSONL=$(ls -t "$PROJECT_DIR"/*.jsonl 2>/dev/null | head -1)
 SESSION_ID=$(basename "$SESSION_JSONL" .jsonl)
 ERROR_LOG=~/.si-errors/"$SESSION_ID".json

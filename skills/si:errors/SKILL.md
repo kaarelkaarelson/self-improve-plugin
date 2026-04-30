@@ -9,10 +9,21 @@ allowed-tools: Bash, Read
 
 Extract friction events from the current session transcript, save them as structured JSON, and display a human-readable summary.
 
+## Step 0: Resolve config root
+
+```bash
+if bash "${CLAUDE_SKILL_DIR}/../si:root/scripts/check.sh"; then
+  source "$HOME/.claude/skills/si:root/cache.sh"
+else
+  echo "Root not resolved — invoke /si:root first."
+  exit 1
+fi
+```
+
 ## Step 1 — Find the session JSONL
 
 ```bash
-PROJECT_DIR=$(find ~/.claude/projects -maxdepth 1 -type d -name "*$(basename $PWD)*" | head -1)
+PROJECT_DIR=$(find "$SI_CLAUDE_ROOT/projects" -maxdepth 1 -type d -name "*$(basename $PWD)*" | head -1)
 SESSION_JSONL=$(ls -t "$PROJECT_DIR"/*.jsonl 2>/dev/null | head -1)
 SESSION_ID=$(basename "$SESSION_JSONL" .jsonl)
 echo "Session: $SESSION_JSONL"

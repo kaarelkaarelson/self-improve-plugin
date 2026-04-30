@@ -13,12 +13,16 @@ Create a new personal Claude Code skill in `~/.claude/skills/` by empirically va
 ## Step 1: Resolve config root
 
 ```bash
-CLAUDE_ROOT=$(readlink -f ~/.claude 2>/dev/null || realpath ~/.claude 2>/dev/null || echo "$HOME/.claude")
-SKILLS_DIR="$CLAUDE_ROOT/skills"
-echo "Skills dir: $SKILLS_DIR"
+if bash "${CLAUDE_SKILL_DIR}/../si:root/scripts/check.sh"; then
+  source "$HOME/.claude/skills/si:root/cache.sh"
+else
+  echo "Root not resolved — invoke /si:root first."
+  exit 1
+fi
+echo "Skills dir: $SI_SKILLS_DIR"
 ```
 
-Use the resolved `CLAUDE_ROOT` for all file operations throughout this skill.
+Use `$SI_CLAUDE_ROOT` and `$SI_SKILLS_DIR` for all file operations throughout this skill.
 
 ## Step 2: Intake
 
@@ -35,7 +39,7 @@ If context was extracted in Step 2, before interviewing:
 
 1. List existing skills to check for overlap:
    ```bash
-   ls "$SKILLS_DIR"
+   ls "$SI_SKILLS_DIR"
    ```
 2. If any existing skill name looks related, read its SKILL.md briefly.
 3. Note overlap or gaps.
@@ -112,7 +116,7 @@ Print the completed trial log to chat before continuing.
 
 Before writing anything, read:
 ```bash
-cat "$SKILLS_DIR/writing-claude-skill/SKILL.md"
+cat "$SI_SKILLS_DIR/writing-claude-skill/SKILL.md"
 ```
 
 Apply its audit checklist when writing the skill in Step 8.
@@ -122,12 +126,12 @@ Apply its audit checklist when writing the skill in Step 8.
 ### Create directory
 
 ```bash
-mkdir -p "$SKILLS_DIR/<name>"
+mkdir -p "$SI_SKILLS_DIR/<name>"
 ```
 
 ### Write SKILL.md
 
-Create `$SKILLS_DIR/<name>/SKILL.md` using:
+Create `$SI_SKILLS_DIR/<name>/SKILL.md` using:
 - **Frontmatter**:
   - `name`: the chosen slug
   - `description`: under 130 chars, third person, front-load trigger keywords, include both what and when
@@ -141,7 +145,7 @@ Create `$SKILLS_DIR/<name>/SKILL.md` using:
 
 ### Create setup.md (if walls were hit)
 
-If the trial uncovered auth walls or required setup steps, create `$SKILLS_DIR/<name>/setup.md`:
+If the trial uncovered auth walls or required setup steps, create `$SI_SKILLS_DIR/<name>/setup.md`:
 - One section per wall: what it is, exact steps to resolve, credentials or URLs needed
 - Reference it from SKILL.md: `"Complete [setup.md](setup.md) before first use."`
 

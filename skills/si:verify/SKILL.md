@@ -10,6 +10,17 @@ allowed-tools: Bash, Read, Agent
 
 Replay a session failure point in an isolated subagent — with the si:improve fix already on disk — and verify the workflow now completes correctly.
 
+## Step 0: Resolve config root
+
+```bash
+if bash "${CLAUDE_SKILL_DIR}/../si:root/scripts/check.sh"; then
+  source "$HOME/.claude/skills/si:root/cache.sh"
+else
+  echo "Root not resolved — invoke /si:root first."
+  exit 1
+fi
+```
+
 ## Step 1: Load inputs
 
 Parse `$ARGUMENTS`:
@@ -28,7 +39,7 @@ If `MESSAGE_INDEX` is empty, check `~/.si-errors/${SESSION_ID}-checkpoints.json`
 ## Step 2: Locate session JSONL
 
 ```bash
-SESSION_JSONL=$(find ~/.claude/projects -name "${SESSION_ID}.jsonl" 2>/dev/null | head -1)
+SESSION_JSONL=$(find "$SI_CLAUDE_ROOT/projects" -name "${SESSION_ID}.jsonl" 2>/dev/null | head -1)
 if [ -z "$SESSION_JSONL" ]; then
   echo "ERROR: Session JSONL not found for $SESSION_ID"
   exit 1
