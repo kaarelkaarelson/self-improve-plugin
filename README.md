@@ -37,16 +37,6 @@ After installing, run once to resolve your config root:
 /si:root
 ```
 
-## Usage
-
-At the end of a session, run:
-
-```
-/si:errors
-/si:improve
-```
-
-`/si:errors` extracts and saves the event log. `/si:improve` reads it, analyzes the timeline, and walks you through applying the fixes.
 
 ## What gets improved
 
