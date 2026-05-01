@@ -2,19 +2,9 @@
 
 > Never let your Claude Code make the same mistake twice.
 
-Your Claude Code agent makes more mistakes than you notice. A task done in 15 tool calls that should have taken 2. A correction you gave last session, forgotten by the next. These mistakes have a price — every redundant tool call, every repeated correction burns tokens, wasting >10,000 tokens per day on work the agent should already know how to do.
+Your Claude Code agent makes more mistakes than you notice. A task done in 15 tool calls that should have taken 2. A correction you gave last session, forgotten by the next. These mistakes cost real tokens — wasting >10,000 per day on work the agent should already know how to do. None of it gets fixed. The next session starts fresh.
 
-None of it gets fixed. The next session starts fresh.
-
-`self-improve` closes the loop. At the end of a session, it extracts every friction event from the transcript, scans your Claude config for what's missing or wrong, and surgically updates your skills and CLAUDE.md so the same failure class doesn't recur.
-
-## Why this matters
-
-Error correction is the foundational principle behind every reliable computing system. TCP allowed the internet to reliably transmit information by detecting and retransmitting every lost packet. Quantum Error Correction (QEC) made reliable quantum computing possible by correcting the noise that makes physical qubits fail.
-
-LLM coding agents have no equivalent layer. Each session is a fresh unreliable component with no accumulated corrections. Mistakes surface, get corrected, and then vanish.
-
-`self-improve` closes the loop for agents.
+Error correction is the foundational principle behind every reliable computing system — TCP retransmits lost packets, QEC makes quantum computing viable. LLM coding agents have no equivalent. Mistakes surface, get corrected, and vanish. `self-improve` closes the loop: at the end of a session, it extracts every friction event, scans your Claude config for what's missing or wrong, and surgically updates your skills and CLAUDE.md so the same failure class doesn't recur.
 
 ## Skills
 
