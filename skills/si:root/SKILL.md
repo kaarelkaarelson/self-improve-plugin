@@ -1,6 +1,6 @@
 ---
 name: si:root
-description: Resolves ~/.claude symlink to its canonical path, writes SI_CLAUDE_ROOT and SI_SKILLS_DIR exports to cache.sh in this skill folder. Idempotent — skips if cache is already valid. Re-run to force refresh.
+description: Resolves ~/.claude to its canonical path (symlink or real directory), writes SI_CLAUDE_ROOT and SI_SKILLS_DIR exports to cache.sh. Idempotent — skips if cache is already valid. Re-run to force refresh.
 disable-model-invocation: true
 allowed-tools: Bash
 ---

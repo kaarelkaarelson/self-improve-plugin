@@ -20,7 +20,7 @@ LLM coding agents have no equivalent layer. Each session is a fresh unreliable c
 
 | Skill | What it does | When to run |
 |-------|-------------|-------------|
-| `/si:root` | Resolves `~/.claude` symlink to its canonical path and caches `SI_CLAUDE_ROOT` and `SI_SKILLS_DIR`. Required by all other skills. | Once after install; re-run if you move your dotfiles |
+| `/si:root` | Resolves `~/.claude` to its canonical path (symlink or not) and caches `SI_CLAUDE_ROOT` and `SI_SKILLS_DIR`. Required by all other skills. | Once after install; re-run if you move your dotfiles |
 | `/si:errors` | Extracts tool failures, rejections, interrupts, and user corrections from the current session transcript | Before `/si:improve` |
 | `/si:improve` | Analyzes failures, scans your config for gaps, proposes minimal surgical fixes, and applies approved changes | After any session with friction |
 | `/si:verify` | Replays a failure checkpoint in an isolated subagent to confirm a fix works. Called automatically by `/si:improve`; can also be run standalone. | After `/si:improve`, or with `<session-id> <message-index>` |
