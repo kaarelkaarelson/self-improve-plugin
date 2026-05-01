@@ -2,7 +2,7 @@
 
 > Never let your Claude Code make the same mistake twice.
 
-Your Claude Code agent makes more mistakes than you notice. A task done in 15 tool calls that should have taken 2. A correction you gave last session, forgotten by the next. These mistakes cost real tokens — wasting >10,000 per day on work the agent should already know how to do. None of it gets fixed. The next session starts fresh.
+Your Claude Code agent makes more mistakes than you notice. A task done in 15 tool calls that should have taken 2. A correction you gave last session, forgotten by the next. These mistakes cost real tokens — wasting >10,000 per day on work the agent should already know how to do. None of it gets fixed automatically.
 
 Error correction is the foundational principle behind every reliable computing system — TCP retransmits lost packets, QEC makes quantum computing viable. LLM coding agents have no equivalent. Mistakes surface, get corrected, and vanish. `self-improve` closes the loop: at the end of a session, it extracts every friction event, scans your Claude config for what's missing or wrong, and surgically updates your skills and CLAUDE.md so the same failure class doesn't recur.
 
