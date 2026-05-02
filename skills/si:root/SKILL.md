@@ -25,7 +25,7 @@ If Step 0 exits early, stop here. No further steps needed.
 ## Step 1: Resolve and write cache.sh
 
 ```bash
-TEMPLATE="${CLAUDE_SKILL_DIR}/cache.template.sh"
+TEMPLATE="${CLAUDE_SKILL_DIR}/templates/cache.template.sh"
 CACHE="$HOME/.claude/skills/si:root/cache.sh"
 CLAUDE_ROOT=$(readlink -f ~/.claude 2>/dev/null || realpath ~/.claude 2>/dev/null || echo "$HOME/.claude")
 SKILLS_DIR="$CLAUDE_ROOT/skills"
