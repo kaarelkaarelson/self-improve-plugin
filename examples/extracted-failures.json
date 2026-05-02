@@ -1,0 +1,59 @@
+{
+  "session_jsonl": "examples/session-with-friction.jsonl",
+  "total_lines": 6,
+  "total_events": 4,
+  "tool_failures": 2,
+  "user_corrections": 2,
+  "events": [
+    {
+      "line": 1,
+      "category": "tool_failure",
+      "kind": "ERROR",
+      "timestamp": "2026-05-02T12:00:02Z",
+      "error": "pytest: command not found",
+      "tool_use_id": "toolu_1",
+      "tool_call": {
+        "tool": "Bash",
+        "input": {
+          "command": "pytest tests/test_widget.py"
+        },
+        "uuid": "assistant-1",
+        "intent": "I will run the test suite to check the change."
+      },
+      "tool_use_result": "",
+      "user_follow_up": "Actually, use python -m unittest instead; this repo does not use pytest."
+    },
+    {
+      "line": 2,
+      "category": "user_correction",
+      "kind": "CORRECTION",
+      "timestamp": "2026-05-02T12:00:05Z",
+      "message": "Actually, use python -m unittest instead; this repo does not use pytest."
+    },
+    {
+      "line": 4,
+      "category": "tool_failure",
+      "kind": "INTERRUPTED",
+      "timestamp": "2026-05-02T12:00:09Z",
+      "error": "Request interrupted by user",
+      "user_follow_up": "Stop. Do not remove user config files; make a reversible patch instead.",
+      "tool_use_id": "toolu_2",
+      "tool_call": {
+        "tool": "Bash",
+        "input": {
+          "command": "rm ~/.claude/CLAUDE-si.md"
+        },
+        "uuid": "assistant-2",
+        "intent": "I will delete the generated file and rerun setup."
+      },
+      "tool_result_content": ""
+    },
+    {
+      "line": 5,
+      "category": "user_correction",
+      "kind": "CORRECTION",
+      "timestamp": "2026-05-02T12:00:11Z",
+      "message": "Stop. Do not remove user config files; make a reversible patch instead."
+    }
+  ]
+}

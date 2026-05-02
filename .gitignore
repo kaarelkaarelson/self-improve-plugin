@@ -1,4 +1,5 @@
 .DS_Store
+.*.swp
 *.pyc
 __pycache__/
 skills/si:root/cache.sh

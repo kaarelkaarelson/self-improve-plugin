@@ -24,6 +24,10 @@ with open(claude_si) as f:
 
 SECTION = "## Custom skills @self-improve"
 
+if trigger_line in content:
+    print(f"Already registered: {trigger_line}")
+    sys.exit(0)
+
 if SECTION not in content:
     content = content.rstrip("\n") + f"\n\n{SECTION}\n\n" + trigger_line + "\n"
 else:

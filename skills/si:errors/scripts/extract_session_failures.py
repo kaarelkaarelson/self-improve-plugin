@@ -71,6 +71,25 @@ def find_preceding_tool_context(lines, from_index):
     """Walk backward from an interrupt to find the tool_result and its tool_use."""
     for j in range(from_index - 1, max(from_index - 4, -1), -1):
         d = lines[j]
+        if d.get("type") == "assistant":
+            msg = d.get("message", {})
+            content = msg.get("content", []) if isinstance(msg, dict) else []
+            if not isinstance(content, list):
+                return None
+            for c in reversed(content):
+                if isinstance(c, dict) and c.get("type") == "tool_use":
+                    return {
+                        "tool_use_id": c.get("id", ""),
+                        "tool_call": {
+                            "tool": c.get("name", ""),
+                            "input": c.get("input", {}),
+                            "uuid": d.get("uuid", ""),
+                            "intent": _find_assistant_intent(lines, j, content),
+                        },
+                        "tool_result_content": "",
+                        "was_error": False,
+                    }
+            return None
         if d.get("type") != "user":
             continue
         msg = d.get("message", {})
@@ -136,22 +155,7 @@ def extract(path):
                 tool_context = get_tool_use_from_assistant(lines, tool_use_id) if tool_use_id else None
                 follow_up = find_next_user_message(lines, i)
 
-                if c.get("type") == "tool_result" and c.get("is_error"):
-                    error_text = str(c.get("content", ""))
-                    kind = "REJECTED" if "was rejected" in error_text or "doesn't want to proceed" in error_text else "ERROR"
-                    events.append({
-                        "line": i,
-                        "category": "tool_failure",
-                        "kind": kind,
-                        "timestamp": timestamp,
-                        "error": error_text[:500],
-                        "tool_use_id": tool_use_id,
-                        "tool_call": tool_context,
-                        "tool_use_result": d.get("toolUseResult", ""),
-                        "user_follow_up": follow_up,
-                    })
-
-                elif c.get("type") == "text" and "Request interrupted" in c.get("text", ""):
+                if c.get("type") == "text" and "Request interrupted" in c.get("text", ""):
                     preceding = find_preceding_tool_context(lines, i)
                     # Deduplicate: if the preceding tool_result already fired as REJECTED/ERROR, skip
                     if preceding and preceding["was_error"] and any(
@@ -171,6 +175,22 @@ def extract(path):
                         event["tool_call"] = preceding["tool_call"]
                         event["tool_result_content"] = preceding["tool_result_content"]
                     events.append(event)
+                    continue
+
+                if c.get("type") == "tool_result" and c.get("is_error"):
+                    error_text = str(c.get("content", ""))
+                    kind = "REJECTED" if "was rejected" in error_text or "doesn't want to proceed" in error_text else "ERROR"
+                    events.append({
+                        "line": i,
+                        "category": "tool_failure",
+                        "kind": kind,
+                        "timestamp": timestamp,
+                        "error": error_text[:500],
+                        "tool_use_id": tool_use_id,
+                        "tool_call": tool_context,
+                        "tool_use_result": d.get("toolUseResult", ""),
+                        "user_follow_up": follow_up,
+                    })
 
         # --- User corrections ---
         text = extract_text(content).strip()
