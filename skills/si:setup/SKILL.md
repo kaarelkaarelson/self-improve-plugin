@@ -30,7 +30,7 @@ If the output is `configured`, use `AskUserQuestion` to ask:
 > "Self-improve is already configured. What would you like to do?
 >
 > (1) Re-run / modify settings
-> (2) Reset — removes all si:setup state (si-preferences.json, CLAUDE-si.md, SI import from CLAUDE.md)"
+> (2) Reset — removes all si:setup state (si-preferences.json, .si-state.json, CLAUDE-si.md, SI import from CLAUDE.md)"
 
 If the user chooses **reset**, run:
 
@@ -100,35 +100,11 @@ After each of Steps 2 and 3, print a one-line status to chat immediately after t
 
 ## Step 3b: Write state file
 
-Write `~/.si-state.json` with the resolved config paths so other skills can read setup state without re-detecting:
+Write `~/.si-state.json` with the resolved config paths so other skills can read setup state from one source of truth:
 
 ```bash
-python3 -c "
-import json, os, subprocess
-
-claude_root = None
-for cmd in ['readlink -f ~/.claude', 'realpath ~/.claude']:
-    try:
-        result = subprocess.check_output(cmd, shell=True, text=True).strip()
-        if result:
-            claude_root = result
-            break
-    except Exception:
-        pass
-if not claude_root:
-    claude_root = os.path.expanduser('~/.claude')
-
-state = {
-    'setup_complete': True,
-    'claude_root': claude_root,
-    'claude_md': os.path.join(claude_root, 'CLAUDE.md'),
-    'skills_dir': os.path.join(claude_root, 'skills'),
-}
-path = os.path.expanduser('~/.si-state.json')
-with open(path, 'w') as f:
-    json.dump(state, f, indent=2)
-print('State written: ' + path)
-"
+MAIN_REPO=$(git worktree list | head -1 | awk '{print $1}')
+python3 "$MAIN_REPO/skills/si:setup/scripts/state.py" write
 ```
 
 Print `✅ ~/.si-state.json written` on success, `❌ state file: <error>` on failure.

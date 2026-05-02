@@ -29,5 +29,6 @@ def strip_si_import(claude_md_path):
         print(f"SI import not found (skipped): {expanded}")
 
 remove_file('~/.claude/si-preferences.json')
+remove_file('~/.si-state.json')
 remove_file('~/.claude/CLAUDE-si.md')
 strip_si_import('~/.claude/CLAUDE.md')
