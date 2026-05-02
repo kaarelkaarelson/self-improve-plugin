@@ -98,6 +98,41 @@ After each of Steps 2 and 3, print a one-line status to chat immediately after t
 - Step 3 success: `✅ CLAUDE.md import wired` or `✅ CLAUDE.md import already present`
 - Step 3 failure: `❌ CLAUDE.md import: <error>`
 
+## Step 3b: Write state file
+
+Write `~/.si-state.json` with the resolved config paths so other skills can read setup state without re-detecting:
+
+```bash
+python3 -c "
+import json, os, subprocess
+
+claude_root = None
+for cmd in ['readlink -f ~/.claude', 'realpath ~/.claude']:
+    try:
+        result = subprocess.check_output(cmd, shell=True, text=True).strip()
+        if result:
+            claude_root = result
+            break
+    except Exception:
+        pass
+if not claude_root:
+    claude_root = os.path.expanduser('~/.claude')
+
+state = {
+    'setup_complete': True,
+    'claude_root': claude_root,
+    'claude_md': os.path.join(claude_root, 'CLAUDE.md'),
+    'skills_dir': os.path.join(claude_root, 'skills'),
+}
+path = os.path.expanduser('~/.si-state.json')
+with open(path, 'w') as f:
+    json.dump(state, f, indent=2)
+print('State written: ' + path)
+"
+```
+
+Print `✅ ~/.si-state.json written` on success, `❌ state file: <error>` on failure.
+
 ## Step 4: Report
 
 Print to chat:

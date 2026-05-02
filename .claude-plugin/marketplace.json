@@ -1,0 +1,30 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "self-improve",
+  "description": "Turn session failures into durable harness improvements",
+  "owner": {
+    "name": "Kaarel Kaarelson",
+    "email": "kaarel.kaarelson@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "self-improve",
+      "description": "Turn session failures into durable harness improvements. Extracts friction events, scans your Claude config for gaps, and surgically updates skills and CLAUDE.md files so the same mistakes never happen again.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Kaarel Kaarelson",
+        "email": "kaarel.kaarelson@gmail.com"
+      },
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://github.com/kaarelkaarelson/self-improve-plugin",
+      "tags": [
+        "self-improve",
+        "session-analysis",
+        "skill-improvement",
+        "meta-learning"
+      ]
+    }
+  ],
+  "version": "0.1.0"
+}
