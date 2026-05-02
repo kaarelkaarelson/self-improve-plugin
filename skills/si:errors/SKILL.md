@@ -35,7 +35,7 @@ echo "ID: $SESSION_ID"
 ```bash
 mkdir -p ~/.si-errors
 OUTPUT_PATH=~/.si-errors/"$SESSION_ID".json
-python3 "${CLAUDE_SKILL_DIR}/extract_session_failures.py" "$SESSION_JSONL" --json \
+python3 "${CLAUDE_SKILL_DIR}/scripts/extract_session_failures.py" "$SESSION_JSONL" --json \
   > "$OUTPUT_PATH"
 echo "Saved: $OUTPUT_PATH"
 ```
@@ -49,7 +49,7 @@ Error log saved: ~/.si-errors/<session-id>.json
 ## Step 3 — Display results
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/extract_session_failures.py" "$SESSION_JSONL"
+python3 "${CLAUDE_SKILL_DIR}/scripts/extract_session_failures.py" "$SESSION_JSONL"
 ```
 
 Display the human-readable output directly. If no events found, say so.
