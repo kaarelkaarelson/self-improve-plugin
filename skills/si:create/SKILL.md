@@ -20,22 +20,6 @@ echo "Skills dir: $SKILLS_DIR"
 
 Use the resolved `CLAUDE_ROOT` for all file operations throughout this skill.
 
-## Step 1b: Load preferences
-
-```bash
-python3 -c "
-import json, os
-path = os.path.expanduser('~/.claude/si-preferences.json')
-if os.path.exists(path):
-    d = json.load(open(path))
-    print('auto_invoke=' + str(d.get('auto_invoke', '')))
-else:
-    print('auto_invoke=')
-"
-```
-
-Read the printed `auto_invoke` value and hold it in memory. Empty means unset — prompt user to run `/si:setup` first.
-
 ## Step 2: Intake
 
 Read `$ARGUMENTS`. Extract any skill name, description, or topic provided.
@@ -67,22 +51,9 @@ Ask in order:
 1. **Purpose**: "What should this skill do, and what would make you invoke it?"
 2. **Name**: "What's a good short name? (lowercase, hyphens only — e.g. `process-invoices`)"
 3. **Verifiability**: "Does this skill produce a concrete, checkable result — something you can verify worked? For example: a file is created, a query returns rows, an API responds successfully."
-4. **Auto-invoke** (only if `auto_invoke` from Step 1b is empty): "Should Claude automatically add this skill as a trigger rule in CLAUDE.md so it self-invokes when conditions match — without you typing the command? (yes / no / always yes for all future skills / always no for all future skills)"
+4. **Auto-invoke**: "Should Claude automatically add this skill as a trigger rule in CLAUDE-si.md so it self-invokes when conditions match — without you typing the command? (yes / no)"
 
-   If the user answers "always yes" or "always no", save the preference:
-
-   ```bash
-   python3 -c "
-   import json, os
-   path = os.path.expanduser('~/.claude/si-preferences.json')
-   prefs = json.load(open(path)) if os.path.exists(path) else {}
-   prefs['auto_invoke'] = True  # set False for 'always no'
-   json.dump(prefs, open(path, 'w'), indent=2)
-   print('Saved auto_invoke=' + str(prefs['auto_invoke']))
-   "
-   ```
-
-   Hold the resolved value (`true` or `false`) in memory as `auto_invoke` for Step 8. Treat "yes" and "always yes" as `true`; "no" and "always no" as `false`.
+   Hold the resolved value (`true` or `false`) in memory as `auto_invoke` for Step 8.
 
 Hold all interview answers in memory for all remaining steps.
 
