@@ -10,6 +10,26 @@ allowed-tools: AskUserQuestion, Bash, Read, Write, Grep, Glob, Agent
 
 Create a new personal Claude Code skill in `~/.claude/skills/` by empirically validating the workflow before codifying it. Interview first, attempt second, write third.
 
+## Step 0: Setup check
+
+Read setup state through the shared `si:setup` helper:
+
+```bash
+MAIN_REPO=$(git worktree list | head -1 | awk '{print $1}')
+python3 "$MAIN_REPO/skills/si:setup/scripts/state.py" status
+```
+
+If the output is `missing`, print:
+
+```
+Run /si:setup first — it wires CLAUDE-si.md into your config (takes ~30 seconds).
+Then re-run /si:create.
+```
+
+Then stop. Do not proceed.
+
+If `ok`, hold `claude_root`, `claude_md`, `claude_si_md`, and `skills_dir` from the JSON in memory. Use these in place of any re-detected paths in subsequent steps.
+
 ## Step 1: Resolve config root
 
 ```bash
@@ -18,7 +38,7 @@ SKILLS_DIR="$CLAUDE_ROOT/skills"
 echo "Skills dir: $SKILLS_DIR"
 ```
 
-Use the resolved `CLAUDE_ROOT` for all file operations throughout this skill.
+If Step 0 returned setup state, use its `claude_root` and `skills_dir` values instead of re-detecting. Otherwise use the resolved `CLAUDE_ROOT` for all file operations throughout this skill.
 
 ## Step 2: Intake
 

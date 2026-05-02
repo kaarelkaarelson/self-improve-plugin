@@ -13,20 +13,11 @@ Analyze the current session for failures, errors, and friction, then surgically 
 
 ## Step 0: Setup check
 
-Read `~/.si-state.json`:
+Read setup state through the shared `si:setup` helper:
 
 ```bash
-python3 -c "
-import json, os
-path = os.path.expanduser('~/.si-state.json')
-if os.path.exists(path):
-    state = json.load(open(path))
-    if state.get('setup_complete'):
-        print('ok')
-        print(json.dumps(state))
-        exit()
-print('missing')
-"
+MAIN_REPO=$(git worktree list | head -1 | awk '{print $1}')
+python3 "$MAIN_REPO/skills/si:setup/scripts/state.py" status
 ```
 
 If the output is `missing`, print:

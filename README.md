@@ -32,7 +32,7 @@ LLM coding agents have no equivalent layer. Each session is a fresh unreliable c
 claude plugin install https://github.com/kaarelkaarelson/self-improve-plugin
 ```
 
-Then run `/si:setup` once to wire the plugin into your Claude config.
+Then run `/si:setup` once to wire the plugin into your Claude config. Setup writes `~/.si-state.json`, which `/si:create` and `/si:improve` use to detect whether setup has been completed before they proceed.
 
 ## What gets improved
 
@@ -42,7 +42,7 @@ Then run `/si:setup` once to wire the plugin into your Claude config.
 
 ## Data
 
-Error logs are written to `~/.si-errors/<session-id>.json`. Local only, not committed to any repo.
+Setup state is written to `~/.si-state.json`. Error logs are written to `~/.si-errors/<session-id>.json`. Local only, not committed to any repo.
 
 ## License
 
