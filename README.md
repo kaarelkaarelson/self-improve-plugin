@@ -25,13 +25,6 @@ Error correction is the foundational principle behind every reliable computing s
 claude plugin install https://github.com/kaarelkaarelson/self-improve-plugin
 ```
 
-After installing, run once to resolve your config root:
-
-```
-/si:root
-```
-
-
 ## What gets improved
 
 - Your global or project CLAUDE.md — missing rules and wrong assumptions that caused friction
