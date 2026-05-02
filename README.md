@@ -6,6 +6,8 @@ Your Claude Code agent makes more mistakes than you notice. A task done in 15 to
 
 `self-improve` closes the loop: at the end of a session, it extracts every friction event, scans your Claude config for what's missing or wrong, surgically updates your skills and CLAUDE.md, and generates new skills for hard-won workflows — so the same failure class doesn't recur.
 
+Inspired by [compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin).
+
 ## Philosophy
 
 Error correction is the foundational principle behind every reliable computing system. TCP allowed the internet to reliably transmit information by detecting and retransmitting every lost packet. Quantum Error Correction (QEC) made reliable quantum computing possible by correcting the noise that makes physical qubits fail. LLM coding agents have no equivalent. Mistakes surface, get corrected, and vanish.
