@@ -11,6 +11,35 @@ Analyze the current session for failures, errors, and friction, then surgically 
 
 **Principle:** Never make the same mistake twice. Every session failure is an opportunity to compound knowledge into durable instructions.
 
+## Step 0: Setup check
+
+Read `~/.si-state.json`:
+
+```bash
+python3 -c "
+import json, os
+path = os.path.expanduser('~/.si-state.json')
+if os.path.exists(path):
+    state = json.load(open(path))
+    if state.get('setup_complete'):
+        print('ok')
+        print(json.dumps(state))
+        exit()
+print('missing')
+"
+```
+
+If the output is `missing`, print:
+
+```
+Run /si:setup first — it wires CLAUDE-si.md into your config (takes ~30 seconds).
+Then re-run /si:improve.
+```
+
+Then stop. Do not proceed.
+
+If `ok`, hold `claude_root`, `claude_md`, and `skills_dir` from the JSON in memory. Use these in place of any re-detected paths in subsequent steps.
+
 ## Step 1: Discovery
 
 ```bash
