@@ -1,7 +1,6 @@
 # self-improve
 
 [![CI](https://github.com/kaarelkaarelson/self-improve-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/kaarelkaarelson/self-improve-plugin/actions/workflows/ci.yml)
-[![GitHub release](https://img.shields.io/github/v/release/kaarelkaarelson/self-improve-plugin?display_name=tag&sort=semver)](https://github.com/kaarelkaarelson/self-improve-plugin/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > Never let your Claude Code make the same mistake twice.
