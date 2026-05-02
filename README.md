@@ -52,11 +52,23 @@ python skills/si:errors/scripts/extract_session_failures.py examples/session-wit
 
 ## Install
 
+Claude Code is the primary supported target:
+
 ```bash
 claude plugin install https://github.com/kaarelkaarelson/self-improve-plugin
 ```
 
 Then run `/si:setup` once to wire the plugin into your Claude config. Setup writes `~/.si-state.json`, which `/si:create` and `/si:improve` use to detect whether setup has been completed before they proceed.
+
+## Support Status
+
+`self-improve` is Claude Code-first today. The repo includes experimental Cursor, Codex, and agents marketplace manifests so the same skill payload can be discovered by those runtimes, following the packaging pattern used by Compound Engineering.
+
+Runtime behavior is not fully provider-neutral yet:
+
+- Setup currently targets `~/.claude/CLAUDE.md` and `~/.claude/CLAUDE-si.md`.
+- Error extraction currently expects Claude Code session JSONL shape.
+- Provider-specific transcript locations, config roots, and setup behavior still need an abstraction layer.
 
 ## What gets improved
 

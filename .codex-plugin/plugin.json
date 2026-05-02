@@ -1,0 +1,39 @@
+{
+  "name": "self-improve",
+  "version": "0.1.0",
+  "description": "Turn session failures into durable harness improvements. Extracts friction events, scans your Claude config for gaps, and surgically updates skills and CLAUDE.md files so the same mistakes never happen again.",
+  "author": {
+    "name": "Kaarel Kaarelson",
+    "email": "kaarel.kaarelson@gmail.com"
+  },
+  "homepage": "https://github.com/kaarelkaarelson/self-improve-plugin",
+  "repository": "https://github.com/kaarelkaarelson/self-improve-plugin",
+  "license": "MIT",
+  "keywords": [
+    "self-improve",
+    "session-analysis",
+    "claude-config",
+    "skill-improvement",
+    "meta-learning"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "self-improve",
+    "shortDescription": "Turn agent-session friction into durable local instructions.",
+    "longDescription": "self-improve extracts friction events from Claude Code sessions, scans local Claude config for missing or wrong instructions, and updates skills and CLAUDE.md files so the same failure class is less likely to recur. Codex support is experimental until provider-specific transcript and config handling is implemented.",
+    "developerName": "Kaarel Kaarelson",
+    "category": "Coding",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/kaarelkaarelson/self-improve-plugin",
+    "defaultPrompt": [
+      "/si:setup",
+      "/si:errors",
+      "/si:improve"
+    ],
+    "screenshots": []
+  }
+}

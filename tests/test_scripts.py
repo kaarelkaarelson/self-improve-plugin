@@ -152,5 +152,30 @@ class ConfigEditScriptsTest(unittest.TestCase):
             self.assertEqual(content.count("@CLAUDE-si.md"), 1)
 
 
+class ManifestParityTest(unittest.TestCase):
+    def test_plugin_manifest_versions_and_descriptions_match(self):
+        manifests = [
+            ROOT / ".claude-plugin" / "plugin.json",
+            ROOT / ".cursor-plugin" / "plugin.json",
+            ROOT / ".codex-plugin" / "plugin.json",
+        ]
+        loaded = [json.loads(path.read_text()) for path in manifests]
+
+        versions = {manifest["version"] for manifest in loaded}
+        descriptions = {manifest["description"] for manifest in loaded}
+
+        self.assertEqual(versions, {"0.1.0"})
+        self.assertEqual(len(descriptions), 1)
+
+    def test_marketplaces_point_to_repo_root_payload(self):
+        claude = json.loads((ROOT / ".claude-plugin" / "marketplace.json").read_text())
+        cursor = json.loads((ROOT / ".cursor-plugin" / "marketplace.json").read_text())
+        agents = json.loads((ROOT / ".agents" / "plugins" / "marketplace.json").read_text())
+
+        self.assertEqual(claude["plugins"][0]["source"], "./")
+        self.assertEqual(cursor["plugins"][0]["source"], "./")
+        self.assertEqual(agents["plugins"][0]["source"]["path"], "./")
+
+
 if __name__ == "__main__":
     unittest.main()
