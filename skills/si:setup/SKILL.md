@@ -1,6 +1,6 @@
 ---
 name: si:setup
-description: Set up or reconfigure the self-improve plugin. Detects Claude root, wires CLAUDE-si.md import, and collects skill preferences. Run once after install or to reconfigure.
+description: Set up or reconfigure the self-improve plugin. Detects Claude root and wires CLAUDE-si.md import into CLAUDE.md. Run once after install or to reconfigure.
 disable-model-invocation: true
 allowed-tools: AskUserQuestion, Bash, Read, Write
 ---
@@ -8,6 +8,42 @@ allowed-tools: AskUserQuestion, Bash, Read, Write
 # Self-Improve Setup
 
 Initialize or reconfigure the self-improve plugin. Safe to re-run — all steps are idempotent.
+
+## Step 0: Reset check
+
+Detect whether setup has already been run by checking if the SI import block is present in CLAUDE.md:
+
+```bash
+python3 -c "
+import os
+claude_md = os.path.expanduser('~/.claude/CLAUDE.md')
+try:
+    content = open(claude_md).read()
+    print('configured' if '<!-- SI:IMPORT:START -->' in content else 'fresh')
+except FileNotFoundError:
+    print('fresh')
+"
+```
+
+If the output is `configured`, use `AskUserQuestion` to ask:
+
+> "Self-improve is already configured. What would you like to do?
+>
+> (1) Re-run / modify settings
+> (2) Reset — removes all si:setup state (si-preferences.json, CLAUDE-si.md, SI import from CLAUDE.md)"
+
+If the user chooses **reset**, run:
+
+```bash
+MAIN_REPO=$(git worktree list | head -1 | awk '{print $1}')
+python3 "$MAIN_REPO/skills/si:setup/scripts/reset.py"
+```
+
+Then stop — print "Reset complete. Run /si:setup again to reconfigure." and exit.
+
+If the user chooses **re-run / modify**, continue to Step 1.
+
+If the output is `fresh`, proceed directly to Step 1 without asking.
 
 ## Step 1: Detect Claude root
 
@@ -19,6 +55,8 @@ echo "Skills dir: $SKILLS_DIR"
 ```
 
 Hold `CLAUDE_ROOT` in memory.
+
+Print to chat: `✅ Claude root: <resolved path>`
 
 ## Step 2: Create CLAUDE-si.md
 
@@ -54,55 +92,23 @@ else:
 "
 ```
 
-## Step 4: Collect preferences
+After each of Steps 2 and 3, print a one-line status to chat immediately after the bash command completes:
+- Step 2 success: `✅ CLAUDE-si.md created` or `✅ CLAUDE-si.md already exists`
+- Step 2 failure: `❌ CLAUDE-si.md: <error>`
+- Step 3 success: `✅ CLAUDE.md import wired` or `✅ CLAUDE.md import already present`
+- Step 3 failure: `❌ CLAUDE.md import: <error>`
 
-Check current `auto_invoke` preference:
-
-```bash
-python3 -c "
-import json, os
-path = os.path.expanduser('~/.claude/si-preferences.json')
-if os.path.exists(path):
-    d = json.load(open(path))
-    print('current auto_invoke=' + str(d.get('auto_invoke', 'unset')))
-else:
-    print('current auto_invoke=unset')
-"
-```
-
-Use `AskUserQuestion` to ask:
-
-> "Should Claude automatically add new skills as trigger rules in CLAUDE-si.md so they self-invoke when conditions match — without you typing the command?
->
-> Current setting: `<value from above, or 'not set'>`
->
-> (yes / no)"
-
-Save the answer:
-
-```bash
-python3 -c "
-import json, os
-path = os.path.expanduser('~/.claude/si-preferences.json')
-prefs = json.load(open(path)) if os.path.exists(path) else {}
-prefs['auto_invoke'] = True  # set False for 'no'
-with open(path, 'w') as f:
-    json.dump(prefs, f, indent=2)
-print('Saved auto_invoke=' + str(prefs['auto_invoke']))
-"
-```
-
-## Step 5: Report
+## Step 4: Report
 
 Print to chat:
 
 ```
 Self-Improve Setup Complete
 
-Claude root:     <resolved path>
-CLAUDE-si.md:    ~/.claude/CLAUDE-si.md  (created / already existed)
+Claude root:      <resolved path>
+CLAUDE-si.md:     ~/.claude/CLAUDE-si.md  (created / already existed)
 CLAUDE.md import: wired / already present
-auto_invoke:     true / false
 
 Run /si:create to create your first skill.
+Run /si:improve at the end of any session to improve your agent harness — refine your existing skills and suggest new ones.
 ```
