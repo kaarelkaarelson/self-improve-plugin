@@ -7,7 +7,7 @@
 
 ## Philosophy
 
-Every computing platform in history has used error correction as the foundational layer: TCP detects and retransmits lost packets, allowing the internet to reliably transmit information; Quantum computers use error correction codes (QEC) to filter out noise to compute with physical qubits. AI agents correct errors in-session, but learnings and corrections vanish as soon as you open a new session.
+Every computing platform has used error correction as the foundational layer: TCP detects and retransmits lost packets, allowing the internet to reliably transmit information; Quantum computers use error correction codes (QEC) to filter out noise to compute with physical qubits. AI agents correct errors in-session, but learnings and corrections vanish as soon as you open a new session.
 
 Your Claude Code  makes more mistakes than you notice. A task done in 15 tool calls that should have taken 2. A correction you gave last session, forgotten by the next. These mistakes cost real tokens — wasting >10,000 per day on work the agent should already know how to do. None of it persists.
 
