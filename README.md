@@ -62,13 +62,9 @@ Then run `/si:setup` once to wire the plugin into your Claude config. Setup writ
 
 ## Support Status
 
-`self-improve` is Claude Code-first today. The repo includes experimental Cursor, Codex, and agents marketplace manifests so the same skill payload can be discovered by those runtimes, following the packaging pattern used by Compound Engineering.
+Claude Code is supported today. `self-improve` setup targets `~/.claude/CLAUDE.md` and `~/.claude/CLAUDE-si.md`, and `/si:errors` expects Claude Code session JSONL.
 
-Runtime behavior is not fully provider-neutral yet:
-
-- Setup currently targets `~/.claude/CLAUDE.md` and `~/.claude/CLAUDE-si.md`.
-- Error extraction currently expects Claude Code session JSONL shape.
-- Provider-specific transcript locations, config roots, and setup behavior still need an abstraction layer.
+Other harnesses are coming soon. The repo already includes experimental Cursor, Codex, and agents marketplace manifests so the same skill payload can be discovered by those runtimes, following the packaging pattern used by Compound Engineering. Runtime setup for those harnesses still needs provider detection, provider-specific config paths, and provider-specific transcript parsing.
 
 ## What gets improved
 
