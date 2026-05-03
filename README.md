@@ -7,13 +7,13 @@
 
 ## Philosophy
 
-Error correction is the foundational principle behind every reliable computing system. TCP allowed the internet to reliably transmit information by detecting and retransmitting every lost packet. Quantum Error Correction (QEC) made reliable quantum computing possible by correcting the noise that makes physical qubits fail. LLM coding agents have no equivalent. Mistakes surface, get corrected, and vanish.
+Every computing platform in history has used error correction as the foundational layer: TCP detects and retransmits lost packets, allowing the internet to reliably transmit information; Quantum computers use error correction codes (QEC) to filter out noise to compute with physical qubits. AI agents correct errors in-session, but learnings and corrections vanish as soon as you open a new session.
 
-Your Claude Code agent makes more mistakes than you notice. A task done in 15 tool calls that should have taken 2. A correction you gave last session, forgotten by the next. These mistakes cost real tokens — wasting >10,000 per day on work the agent should already know how to do. None of it gets fixed automatically.
+In fact, your Claude Code  makes more mistakes than you notice. A task done in 15 tool calls that should have taken 2. A correction you gave last session, forgotten by the next. These mistakes cost real tokens — wasting >10,000 per day on work the agent should already know how to do. None of it persists.
 
-`self-improve` closes the loop: at the end of a session, it extracts every friction event, scans your Claude config for what's missing or wrong, surgically updates your skills and CLAUDE.md, and generates new skills for hard-won workflows — so the same failure class doesn't recur.
+`self-improve` closes the loop: at the end of a session, it extracts every friction event, scans your Claude config for what's missing or wrong, surgically updates your skills and CLAUDE.md, and proposes to generate new skills for hard-won workflows — so the same failure class doesn't recur ever again.
 
-Inspired by [Compound Engineering](https://github.com/EveryInc/compound-engineering-plugin), but focused on one narrower loop: turning agent mistakes into durable local Claude Code instructions.
+Inspired by [Compound Engineering](https://github.com/EveryInc/compound-engineering-plugin), but focused on improving the agent harness instead of the code base.
 
 ## Skills
 
