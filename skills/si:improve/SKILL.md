@@ -7,16 +7,19 @@ disable-model-invocation: true
 
 # Self-Improve
 
-Analyze the current session for failures, errors, and friction, then surgically update skills and CLAUDE.md files so the same mistakes never happen again.
+Analyze the current session for failures, errors, friction, and inefficiencies, then surgically update skills and CLAUDE.md files so the same mistakes and slow paths never happen again.
 
-**Principle:** Never make the same mistake twice. Every session failure is an opportunity to compound knowledge into durable instructions.
+**Principle:** Never make the same mistake twice. Every session failure *and inefficiency* is an opportunity to compound knowledge into durable instructions. Errors that threw exceptions are only half the picture — silent slow paths (avoidable detective work, missing reference data in skills, multi-step lookups that a good skill would short-circuit) are equally worth compounding.
 
 ## Step 0: Setup check
 
 Read setup state through the shared `si:setup` helper:
 
 ```bash
-MAIN_REPO=$(git worktree list | head -1 | awk '{print $1}')
+# Locate the plugin root dynamically — works from any repo, any worktree.
+# Find si:setup anywhere under ~/.superset and navigate two levels up to the plugin root.
+PLUGIN_DIR=$(find ~/.superset -maxdepth 5 -type d -name "si:setup" 2>/dev/null | head -1)
+MAIN_REPO=$(dirname "$(dirname "$PLUGIN_DIR")")
 python3 "$MAIN_REPO/skills/si:setup/scripts/state.py" status
 ```
 
@@ -57,7 +60,7 @@ Hold both in memory and use whichever is appropriate in subsequent steps. Search
 
 ### Step 2a: Load collected errors
 
-Run `/si:errors` first if it hasn't been run yet.
+Run `/self-improve:si-errors` first if it hasn't been run yet. **Important: `si:errors` has `disable-model-invocation: true` — it cannot be invoked via the Skill tool. Always use the slash command `/self-improve:si-errors` directly in the chat.**
 
 Check the current session context for a path printed by `/si:errors` (format: `Error log saved: ~/.si-errors/<session-id>.json`). If found, use that path directly.
 
@@ -73,7 +76,7 @@ echo "Error log: $ERROR_LOG"
 
 Read the JSON file. It contains structured events covering the entire session including parts lost to context compaction.
 
-### Step 2b: Analyze the timeline
+### Step 2b: Analyze the timeline (errors file)
 
 Work through the timeline chronologically. For each event, classify it:
 
@@ -82,6 +85,17 @@ Work through the timeline chronologically. For each event, classify it:
 - **Hard-won workflows**: multi-step tasks that required significant trial-and-error or user steering to complete — where the general pattern would be valuable to remember.
 
 Prioritize corrections over technical errors. The natural bias is to report technical failures because they're unambiguous, but user steering is where the compoundable learning lives.
+
+### Step 2b-ii: In-context inefficiency scan
+
+Separately, scan the current conversation from memory for **silent inefficiencies** — things that succeeded but shouldn't have required as many steps:
+
+- **Avoidable detective work**: ran grep/list/scan to find something a skill should have listed directly (e.g. grepping serverless.yml to find a table name that belongs in the skill's inventory)
+- **Missing reference data**: had to look up IDs, table names, field names, endpoints, or config values that are stable and belong in a skill
+- **Slow paths**: did 3+ steps to accomplish something that one skill lookup would have short-circuited
+- **Repeated setup**: re-derived something already established earlier in the session
+
+These events produce no errors and no user corrections — they are only visible from in-context memory. Do not skip this pass.
 
 ### Step 2c: Extract findings
 
@@ -94,11 +108,11 @@ For each friction event worth compounding, extract:
 
 Print the findings to the chat before proceeding:
 
-| # | Line | What happened | Root cause | What would have prevented it | Worth improving? |
-|---|------|---------------|------------|------------------------------|-----------------|
-| 1 | N    | …             | …          | …                            | Yes / No        |
+| # | Source | Line | What happened | Root cause | What would have prevented it | Worth improving? |
+|---|--------|------|---------------|------------|------------------------------|-----------------|
+| 1 | errors / in-context | N or — | … | … | … | Yes / No |
 
-**Line**: the `line` field from the error event in the si:errors JSON. This is the JSONL line number used as the checkpoint index when calling si:verify after changes are applied.
+**Source**: `errors` = came from the si:errors JSON file; `in-context` = spotted from live conversation memory (no corresponding error event). **Line**: the `line` field from the error event in the si:errors JSON, or `—` for in-context findings. Used as the checkpoint index when calling si:verify after changes are applied.
 
 **Worth improving?** rubric:
 - **Yes** — repeated pattern, cost meaningful time, or caused the user to steer/correct course
